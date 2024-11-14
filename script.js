@@ -6,7 +6,7 @@ const filePath = path.join(__dirname, 'products.csv');
 
 const usedEanCodes = new Set();
 
-const PRODUCT_TITLE_CHAR_LIMIT = 40;
+const PRODUCT_TITLE_CHAR_LIMIT = 15;
 
 const indexJson = {};
 
@@ -18,6 +18,11 @@ function normalizeText(text) {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replace(/[^a-z0-9]/g, "");
+}
+
+const outputDir = path.join(__dirname, 'output');
+if (fs.existsSync(outputDir)) {
+    fs.rmdirSync(outputDir, { recursive: true });
 }
 
 fs.createReadStream(filePath)
