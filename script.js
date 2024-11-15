@@ -48,15 +48,17 @@ fs.createReadStream(filePath)
                 });
 
                 const normalizedTitle = normalizeText(row.productTitle);
-                const first10Chars = normalizedTitle.substring(0, PRODUCT_TITLE_CHAR_LIMIT);
-                const outputPath = [...first10Chars].reduce((acc, char) => {
-                    return path.join(acc, char);
-                }, '');
+                const firstChars = normalizedTitle.substring(0, PRODUCT_TITLE_CHAR_LIMIT);
+                [...firstChars].reduce((acc, char) => {
+                    const newPath = path.join(acc, char);
 
-                productsJson[outputPath] = [
-                    ...(productsJson[outputPath] || []),
-                    row,
-                ];
+                    productsJson[newPath] = [
+                        ...(productsJson[newPath] || []),
+                        row,
+                    ];
+
+                    return newPath;
+                }, '');
             }
         }
     })
@@ -89,6 +91,7 @@ fs.createReadStream(filePath)
         if (!fs.existsSync(settingsOutputDir)) {
             fs.mkdirSync(settingsOutputDir, { recursive: true });
         }
+
         fs.writeFile(path.join(settingsOutputDir, 'settings.json'), JSON.stringify({
             product_char_limit: PRODUCT_TITLE_CHAR_LIMIT,
         }), (error) => {
