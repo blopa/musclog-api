@@ -15,23 +15,27 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4.2.2
 
-      # Step 2: Set up Node.js environment
+      # Step 2: Increase file descriptor limit
+      - name: Increase file descriptor limit
+        run: ulimit -n 4096
+
+      # Step 3: Set up Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.4
         with:
           node-version: '21'
 
-      # Step 3: Install dependencies
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: |
           npm cache clean --force
           npm install
 
-      # Step 4: Run the script
+      # Step 5: Run the script
       - name: Run script.js
         run: node script.js
 
-      # Step 5: Deploy to GitHub Pages
+      # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
